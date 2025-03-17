@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { showTerraformChanges } from './webviewManager';
+import { showTerraformChanges } from './webViewManager';
 
 export function parseTerraformPlan() {
     const workspacePath = vscode.workspace.rootPath;
