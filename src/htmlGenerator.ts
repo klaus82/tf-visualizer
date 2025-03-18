@@ -1,4 +1,17 @@
 export function generateHtmlContent(changes: any[]): string {
+    const { html: tableRowsHtml, count: rowCount } = generateTableRows(changes);
+
+    // Gather unique action values
+    const actionSet = new Set<string>();
+    changes.forEach(change => {
+        change.change.actions.forEach((action: string) => {
+            if (action !== 'no-op') {
+                actionSet.add(action);
+            }
+        });
+    });
+    const actionOptions = Array.from(actionSet).map(action => `<option value="${action}">${action.charAt(0).toUpperCase() + action.slice(1)}</option>`).join('');
+
     const htmlHead = `
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -59,10 +72,9 @@ export function generateHtmlContent(changes: any[]): string {
     <body>
         <h2>Terraform Plan Changes</h2>
         <ul>
-            <li><b>Number of changes</b>: ${changes.length}</li>
+            <li><b>Number of changes</b>: ${rowCount}</li>
         </ul>
-        <table id="ControlTable">
-            
+        <table id="ControlTable"> 
             <tr>
                 <td>
                     <!--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for changes..">-->
@@ -71,10 +83,7 @@ export function generateHtmlContent(changes: any[]): string {
                     <label for="filter">Filter by Action:</label>
                     <select id="filter" onchange="filterTable()">
                         <option value="">All</option>
-                        <option value="create">Create</option>
-                        <option value="delete">Delete</option>
-                        <option value="update">Update</option>
-                        <option value="delete, create">Delete Create</option>
+                        ${actionOptions}
                     </select>
                 </td>
             </tr>
@@ -84,7 +93,7 @@ export function generateHtmlContent(changes: any[]): string {
                 <th>Change</th>
                 <th>Actions</th>
             </tr>
-            ${generateTableRows(changes)}
+            ${tableRowsHtml}
         </table>
         <script>
             function myFunction() {
@@ -115,7 +124,7 @@ export function generateHtmlContent(changes: any[]): string {
                     let td = rows[i].getElementsByTagName("td")[1];
                     if (td) {
                         let txtValue = td.textContent || td.innerText;
-                        let shouldDisplay = (filter === "" || txtValue.toUpperCase() === filter);
+                        let shouldDisplay = (filter === "" || txtValue.toUpperCase().includes(filter));
                         rows[i].style.display = shouldDisplay ? "" : "none";
                         rows[i + 1].style.display = shouldDisplay ? "" : "none"; // Show/hide details row accordingly
                     }
@@ -142,11 +151,16 @@ export function generateHtmlContent(changes: any[]): string {
 
 import {diffString, diff} from 'json-diff';
 
-function generateTableRows(changes: any[]): string {
-    return changes.map((change, index) => {
+function generateTableRows(changes: any[]):  { html: string, count: number } {
+    let changesCount = 0;
+    const rowsHtml = changes.map((change, index) => {
+        
         if (change.change.actions.includes('no-op')) {
             return ``;
         }
+
+        changesCount++;
+        
         let changesText = change.change.actions.join(', ');
         let color = 'blue';
         if (change.change.actions.includes('create')) {
@@ -182,6 +196,8 @@ function generateTableRows(changes: any[]): string {
             </tr>
         `;
     }).join('');
+
+    return { html: rowsHtml, count: changesCount };
 }
 
 function renderDiff(diff:string) {
