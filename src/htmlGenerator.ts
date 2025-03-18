@@ -1,7 +1,7 @@
 export function generateHtmlContent(changes: any[]): string {
     const { html: tableRowsHtml, count: rowCount } = generateTableRows(changes);
 
-    // Gather unique action values
+    // Gather unique action values, excluding 'no-op'
     const actionSet = new Set<string>();
     changes.forEach(change => {
         change.change.actions.forEach((action: string) => {
@@ -10,7 +10,12 @@ export function generateHtmlContent(changes: any[]): string {
             }
         });
     });
-    const actionOptions = Array.from(actionSet).map(action => `<option value="${action}">${action.charAt(0).toUpperCase() + action.slice(1)}</option>`).join('');
+    const actionOptions = Array.from(actionSet).map(action => `
+        <label>
+            <input type="radio" name="filter" value="${action}" onchange="filterTable()">
+            ${action.charAt(0).toUpperCase() + action.slice(1)}
+        </label>
+    `).join('');
 
     const htmlHead = `
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -66,6 +71,14 @@ export function generateHtmlContent(changes: any[]): string {
         }
         .removed { color: #e06c75; } /* Red */
         .added { color: #98c379; } /* Green */
+        .filter-labels {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .filter-labels label {
+            cursor: pointer;
+        }
     </style>
     `;
     const htmlBody = `
@@ -74,20 +87,16 @@ export function generateHtmlContent(changes: any[]): string {
         <ul>
             <li><b>Number of changes</b>: ${rowCount}</li>
         </ul>
-        <table id="ControlTable"> 
-            <tr>
-                <td>
-                    <!--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for changes..">-->
-                </td>
-                <td>
-                    <label for="filter">Filter by Action:</label>
-                    <select id="filter" onchange="filterTable()">
-                        <option value="">All</option>
-                        ${actionOptions}
-                    </select>
-                </td>
-            </tr>
-        </table>
+        <div id="ControlTable">
+            <!--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for changes..">-->
+            <div class="filter-labels">
+                <label>
+                    <input type="radio" name="filter" value="" onchange="filterTable()" checked>
+                    All
+                </label>
+                ${actionOptions}
+            </div>
+        </div>
         <table id="myTable">
             <tr>
                 <th>Change</th>
@@ -113,10 +122,15 @@ export function generateHtmlContent(changes: any[]): string {
                 }
             }
 
-
             function filterTable() {
-                let dropdown = document.getElementById("filter");
-                let filter = dropdown.value.toUpperCase();
+                let radios = document.getElementsByName("filter");
+                let filter = "";
+                for (let i = 0; i < radios.length; i++) {
+                    if (radios[i].checked) {
+                        filter = radios[i].value.toUpperCase();
+                        break;
+                    }
+                }
                 let table = document.getElementById("myTable");
                 let rows = table.getElementsByTagName("tr");
 
@@ -139,9 +153,6 @@ export function generateHtmlContent(changes: any[]): string {
                     detailsRow.style.display = 'none';
                 }
             }
-            
-
-
         </script>
     </body>
     `;
@@ -206,5 +217,3 @@ function renderDiff(diff:string) {
         .replace(/\u001b\[32m/g, '<span class="added">')    // Green start
         .replace(/\u001b\[39m/g, '</span>');                 // End color
 }
-
-
