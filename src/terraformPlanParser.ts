@@ -4,6 +4,7 @@ import * as path from 'path';
 import { showTerraformChanges } from './webViewManager';
 
 export function parseTerraformPlan() {
+
     const workspacePath = vscode.workspace.rootPath;
     if (!workspacePath) {
         vscode.window.showErrorMessage('No workspace is open.');
