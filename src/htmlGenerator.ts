@@ -39,6 +39,20 @@ export function generateHtmlContent(changes: any[]): string {
             white-space: -o-pre-wrap; /* Opera 7 */
             word-wrap: break-word; /* IE */
         }
+        #detailsTable {
+            width: 100%;
+            border-collapse: collapse; 
+        }
+        #detailsCell_20 {
+            width: 20%; 
+            word-wrap: break-word;
+        }
+        #detailsCell_40 {
+            width: 40%; 
+            word-wrap: break-word;
+        }
+        .removed { color: #e06c75; } /* Red */
+        .added { color: #98c379; } /* Green */
     </style>
     `;
     const htmlBody = `
@@ -116,6 +130,9 @@ export function generateHtmlContent(changes: any[]): string {
                     detailsRow.style.display = 'none';
                 }
             }
+            
+
+
         </script>
     </body>
     `;
@@ -140,7 +157,7 @@ function generateTableRows(changes: any[]): string {
             color = 'orange';
         }
 
-        let delta = diff(change.change.before, change.change.after);
+        let delta = diffString(change.change.before, change.change.after);
 
         return `
             <tr onclick="toggleDetails(${index})">
@@ -149,16 +166,16 @@ function generateTableRows(changes: any[]): string {
             </tr>
             <tr id="details-${index}" style="display: none;">
                 <td colspan="2">
-                    <table style="width: 100%;">
+                    <table id="detailsTable">
                         <tr>
                             <th>Changes</th>
                             <th>Before</th>
                             <th>After</th>
                         </tr>
                         <tr>
-                            <td style="width: 20%; word-wrap: break-word;"><pre>${JSON.stringify(delta, null, 2)}</pre></td>
-                            <td style="width: 40%; word-wrap: break-word;"><pre>${JSON.stringify(change.change.before, null, 2)}</pre></td>
-                            <td style="width: 40%; word-wrap: break-word;"><pre>${JSON.stringify(change.change.after, null, 2)}</pre></td>
+                            <td Class=detailsCell_20><pre>${renderDiff(delta)}</pre></td>
+                            <td Class=detailsCell_40><pre>${JSON.stringify(change.change.before, null, 2)}</pre></td>
+                            <td Class=detailsCell_40><pre>${JSON.stringify(change.change.after, null, 2)}</pre></td>
                         </tr>
                     </table>
                 </td>
@@ -166,3 +183,12 @@ function generateTableRows(changes: any[]): string {
         `;
     }).join('');
 }
+
+function renderDiff(diff:string) {
+    return diff
+        .replace(/\u001b\[31m/g, '<span class="removed">')  // Red start
+        .replace(/\u001b\[32m/g, '<span class="added">')    // Green start
+        .replace(/\u001b\[39m/g, '</span>');                 // End color
+}
+
+
