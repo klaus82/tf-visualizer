@@ -26,7 +26,7 @@ Run your terrafrom plan with:
 terraform plan -out=plan && terraform show -json plan > tfplan.json
 ```
 Then open TF-visualizer in vs-code command:
-![alt text](https://github.com/klaus82/tf-visualizer/blob/main/images/image.png) 
+![ommand](https://raw.githubusercontent.com/klaus82/tf-visualizer/refs/heads/main/images/image.png) 
 
 
 
