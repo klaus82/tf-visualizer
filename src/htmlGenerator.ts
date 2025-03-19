@@ -36,10 +36,14 @@ export function generateHtmlContent(changes: any[]): string {
             width: 100%;
             border: 1px solid #ddd;
             font-size: 14px;
+            table-layout: fixed; /* Prevent horizontal scrolling */
         }
         #myTable th, #myTable td {
             text-align: left;
             padding: 12px;
+            overflow: hidden; /* Prevent overflow */
+            text-overflow: ellipsis; /* Add ellipsis for overflow text */
+            white-space: nowrap; /* Prevent text wrapping */
         }
         #myTable tr {
             border-bottom: 1px solid #ddd;
@@ -64,6 +68,7 @@ export function generateHtmlContent(changes: any[]): string {
         #detailsCell_20 {
             width: 20%; 
             word-wrap: break-word;
+            vertical-align: top; /* Align to the top */
         }
         #detailsCell_40 {
             width: 40%; 
@@ -88,7 +93,6 @@ export function generateHtmlContent(changes: any[]): string {
             <li><b>Number of changes</b>: ${rowCount}</li>
         </ul>
         <div id="ControlTable">
-            <!--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for changes..">-->
             <div class="filter-labels">
                 <label>
                     <input type="radio" name="filter" value="" onchange="filterTable()" checked>
@@ -198,9 +202,9 @@ function generateTableRows(changes: any[]):  { html: string, count: number } {
                             <th>After</th>
                         </tr>
                         <tr>
-                            <td Class=detailsCell_20><pre>${renderDiff(delta)}</pre></td>
-                            <td Class=detailsCell_40><pre>${JSON.stringify(change.change.before, null, 2)}</pre></td>
-                            <td Class=detailsCell_40><pre>${JSON.stringify(change.change.after, null, 2)}</pre></td>
+                            <td class="detailsCell_20"><pre>${renderDiff(delta)}</pre></td>
+                            <td class="detailsCell_40"><pre>${JSON.stringify(change.change.before, null, 2)}</pre></td>
+                            <td class="detailsCell_40"><pre>${JSON.stringify(change.change.after, null, 2)}</pre></td>
                         </tr>
                     </table>
                 </td>
