@@ -1,71 +1,44 @@
 # terraform-visualizer README
 
-This is the README for your extension "terraform-visualizer". After writing up a brief description, we recommend including the following sections.
+Terraform Visualizer is a Visual Studio Code extension that helps you visualize and manage your Terraform plans. This extension provides a user-friendly interface to view and filter changes in your Terraform plans, making it easier to understand and manage your infrastructure changes.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Visualize Terraform Plans**: View detailed changes in your Terraform plans with a clear and concise interface.
+- **Filter Changes**: Easily filter changes by action (create, update, delete) using intuitive radio buttons.
+- **Toggle Details**: Expand and collapse detailed views of changes to focus on the information you need.
+- **Higlight Differences**: Show the differences for all the changes 
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- **Terraform**: Ensure you have Terraform installed on your system. You can download it from the [official Terraform website](https://www.terraform.io/downloads.html).
 
-## Extension Settings
+## How to use the extension
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Run your terrafrom plan with:
 
-For example:
+```
+terraform plan -out=plan && terraform show -json plan > tfplan.json
+```
+Then open TF-visualizer in vs-code command:
+![alt text](/images/image.png) 
 
-This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- **Large Plans**: Performance may be impacted when visualizing very large Terraform plans. We are working on optimizations to improve this.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
+- Initial release of Terraform Visualizer.
+- Visualize Terraform plans with detailed views.
+- Filter changes by action.
 
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+## TO DO:
+- [ ] Improve the UI.
+- [ ] Search functionality to find specific changes.
+- [ ] Visualize the `terraform graph -type=plan`
