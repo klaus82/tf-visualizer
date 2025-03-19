@@ -1,4 +1,8 @@
-# terraform-visualizer README
+<p align="center">
+  <img width="200" height="200" alt="tf-visualizer" src="./assets/tf-visualizer.png">
+</p>
+
+# terraform-visualizer 
 
 Terraform Visualizer is a Visual Studio Code extension that helps you visualize and manage your Terraform plans. This extension provides a user-friendly interface to view and filter changes in your Terraform plans, making it easier to understand and manage your infrastructure changes.
 
@@ -7,7 +11,7 @@ Terraform Visualizer is a Visual Studio Code extension that helps you visualize 
 - **Visualize Terraform Plans**: View detailed changes in your Terraform plans with a clear and concise interface.
 - **Filter Changes**: Easily filter changes by action (create, update, delete) using intuitive radio buttons.
 - **Toggle Details**: Expand and collapse detailed views of changes to focus on the information you need.
-- **Higlight Differences**: Show the differences for all the changes 
+- **Highlight Differences**: Show the differences for all the changes 
 
 
 ## Requirements
@@ -32,7 +36,7 @@ Then open TF-visualizer in vs-code command:
 
 ## Release Notes
 
-### 1.0.0
+### 1.0.1
 
 - Initial release of Terraform Visualizer.
 - Visualize Terraform plans with detailed views.
