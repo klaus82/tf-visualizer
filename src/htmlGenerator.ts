@@ -16,7 +16,7 @@ export function generateHtmlContent(changes: any[]): string {
             ${action.charAt(0).toUpperCase() + action.slice(1)}
         </label>
     `).join('');
-
+    
     const htmlHead = `
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
