@@ -16,6 +16,8 @@ export function generateHtmlContent(changes: any[]): string {
             ${action.charAt(0).toUpperCase() + action.slice(1)}
         </label>
     `).join('');
+
+    //const htmlHead = fetch('src/htmlHead.html');
     
     const htmlHead = `
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -92,6 +94,7 @@ export function generateHtmlContent(changes: any[]): string {
         <ul>
             <li><b>Number of changes</b>: ${rowCount}</li>
         </ul>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for changes..">
         <div id="ControlTable">
             <div class="filter-labels">
                 <label>
@@ -114,14 +117,15 @@ export function generateHtmlContent(changes: any[]): string {
                 input = document.getElementById("myInput");
                 filter = input.value.toUpperCase();
                 table = document.getElementById("myTable");
-                tr = table.getElementsByTagName("tr");
-                for (i = 0; i < tr.length; i += 2) { // Increment by 2 to skip details rows
-                    td = tr[i].getElementsByTagName("td")[0];
+                let rows = table.getElementsByTagName("tr");
+
+                for (let i = 1; i < rows.length; i += 2) { // Increment by 2 to skip details rows
+                    let td = rows[i].getElementsByTagName("td")[0];
                     if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        let shouldDisplay = txtValue.toUpperCase().indexOf(filter) > -1;
-                        tr[i].style.display = shouldDisplay ? "" : "none";
-                        tr[i + 1].style.display = shouldDisplay ? "" : "none"; // Show/hide details row accordingly
+                        let txtValue = td.textContent || td.innerText;
+                        let shouldDisplay = (filter === "" || txtValue.toUpperCase().includes(filter));
+                        rows[i].style.display = shouldDisplay ? "" : "none";
+                        rows[i + 1].style.display = shouldDisplay && rows[i].style.display === 'table-row' ? "table-row" : "none"; // Show/hide details row accordingly
                     }
                 }
             }
@@ -144,7 +148,7 @@ export function generateHtmlContent(changes: any[]): string {
                         let txtValue = td.textContent || td.innerText;
                         let shouldDisplay = (filter === "" || txtValue.toUpperCase().includes(filter));
                         rows[i].style.display = shouldDisplay ? "" : "none";
-                        rows[i + 1].style.display = shouldDisplay ? "" : "none"; // Show/hide details row accordingly
+                        rows[i + 1].style.display = shouldDisplay && rows[i].style.display === 'table-row' ? "table-row" : "none";// Show/hide details row accordingly
                     }
                 }
             }
