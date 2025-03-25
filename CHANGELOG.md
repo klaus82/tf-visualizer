@@ -2,8 +2,11 @@
 
 All notable changes to the "terraform-visualizer" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## [1.1.0] - 2025-03-25
 
-- Initial release
+### Added
+- Added search bar for changes
+
+### Changed
+- Labels and labels filter

@@ -36,6 +36,10 @@ Then open TF-visualizer in vs-code command:
 
 ## Release Notes
 
+### 1.1.0
+- Added search bar for changes
+- Small upgrades in UI 
+
 ### 1.0.1
 
 - Initial release of Terraform Visualizer.
@@ -43,6 +47,6 @@ Then open TF-visualizer in vs-code command:
 - Filter changes by action.
 
 ## TO DO:
+- [x] Search functionality to find specific changes.
 - [ ] Improve the UI.
-- [ ] Search functionality to find specific changes.
 - [ ] Visualize the `terraform graph -type=plan`
