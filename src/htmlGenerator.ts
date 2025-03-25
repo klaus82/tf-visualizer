@@ -11,7 +11,7 @@ export function generateHtmlContent(changes: any[]): string {
         });
     });
     const actionOptions = Array.from(actionSet).map(action => `
-        <label>
+        <label class="container" style="background-color: ${generateButtonColor(action)};">
             <input type="radio" name="filter" value="${action}" onchange="filterTable()">
             ${action.charAt(0).toUpperCase() + action.slice(1)}
         </label>
@@ -24,7 +24,6 @@ export function generateHtmlContent(changes: any[]): string {
     <style>
         * { box-sizing: border-box; }
         #myInput {
-            background-image: url('/css/searchicon.png');
             background-position: 10px 10px;
             background-repeat: no-repeat;
             width: 100%;
@@ -46,6 +45,12 @@ export function generateHtmlContent(changes: any[]): string {
             overflow: hidden; /* Prevent overflow */
             text-overflow: ellipsis; /* Add ellipsis for overflow text */
             white-space: nowrap; /* Prevent text wrapping */
+        }
+        #myTable th:nth-child(1), #myTable td:nth-child(1) {
+            width: 70%;
+        }
+        #myTable th:nth-child(2), #myTable td:nth-child(2) {
+            width: 30%;
         }
         #myTable tr {
             border-bottom: 1px solid #ddd;
@@ -86,6 +91,23 @@ export function generateHtmlContent(changes: any[]): string {
         .filter-labels label {
             cursor: pointer;
         }
+
+        /* Hide the browser's default radio button */
+        .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            background-color: gray;
+            color: white;
+            padding: 8px; 
+            border-radius: 5px;
+        }
+
     </style>
     `;
     const htmlBody = `
@@ -94,12 +116,12 @@ export function generateHtmlContent(changes: any[]): string {
         <ul>
             <li><b>Number of changes</b>: ${rowCount}</li>
         </ul>
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for changes..">
+        <input type="text" id="myInput" onkeyup="searchFunction()" placeholder="Search for changes..">
         <div id="ControlTable">
             <div class="filter-labels">
-                <label>
+                <label class="container">
                     <input type="radio" name="filter" value="" onchange="filterTable()" checked>
-                    All
+                    All changes
                 </label>
                 ${actionOptions}
             </div>
@@ -112,7 +134,7 @@ export function generateHtmlContent(changes: any[]): string {
             ${tableRowsHtml}
         </table>
         <script>
-            function myFunction() {
+            function searchFunction() {
                 var input, filter, table, tr, td, i, txtValue;
                 input = document.getElementById("myInput");
                 filter = input.value.toUpperCase();
@@ -170,6 +192,19 @@ export function generateHtmlContent(changes: any[]): string {
 
 import {diffString, diff} from 'json-diff';
 
+function generateButtonColor(action: string): string {
+    switch (action) {
+        case 'create':
+            return 'green';
+        case 'delete':
+            return 'red';
+        case 'update':
+            return 'orange';
+        default:
+            return 'blue';
+    }
+}
+
 function generateTableRows(changes: any[]):  { html: string, count: number } {
     let changesCount = 0;
     const rowsHtml = changes.map((change, index) => {
@@ -180,7 +215,7 @@ function generateTableRows(changes: any[]):  { html: string, count: number } {
 
         changesCount++;
         
-        let changesText = change.change.actions.join(', ');
+        let changesText = change.change.actions.map((action: string) => action.charAt(0).toUpperCase() + action.slice(1)).join(', ');
         let color = 'blue';
         if (change.change.actions.includes('create')) {
             color = 'green';
@@ -195,7 +230,7 @@ function generateTableRows(changes: any[]):  { html: string, count: number } {
         return `
             <tr onclick="toggleDetails(${index})">
                 <td><b>${change.address}</b></td>
-                <td><span style="color: ${color};">${changesText}</span></td>
+                <td><span style="background-color: ${color};color: white; padding: 8px; border-radius: 5px;">${changesText}</span></td>
             </tr>
             <tr id="details-${index}" style="display: none;">
                 <td colspan="2">
