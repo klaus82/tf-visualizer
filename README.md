@@ -26,7 +26,7 @@ Run your terrafrom plan with:
 terraform plan -out=plan && terraform show -json plan > tfplan.json
 ```
 Then open TF-visualizer in vs-code command:
-![ommand](https://raw.githubusercontent.com/klaus82/tf-visualizer/refs/heads/main/images/image.png) 
+![command](https://raw.githubusercontent.com/klaus82/tf-visualizer/refs/heads/main/images/image.png) 
 
 
 
@@ -38,7 +38,8 @@ Then open TF-visualizer in vs-code command:
 
 ### 1.1.0
 - Added search bar for changes
-- Small upgrades in UI 
+  ![search_bar](https://raw.githubusercontent.com/klaus82/tf-visualizer/refs/heads/main/assets/1.1.0/search-bar.png)
+- New labels
 
 ### 1.0.1
 
