@@ -78,7 +78,7 @@ export function generateHtmlContent(changes: any[]): string {
             vertical-align: top; /* Align to the top */
         }
         #detailsCell_40 {
-            width: 40%; 
+            width: 5ß0%; 
             word-wrap: break-word;
         }
         .removed { color: #e06c75; } /* Red */
@@ -106,6 +106,31 @@ export function generateHtmlContent(changes: any[]): string {
             color: white;
             padding: 8px; 
             border-radius: 5px;
+        }
+
+        .json-container {
+            flex: 1;
+            margin: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .diff-container {
+            flex: 1;
+            margin: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-x: auto;
+        }
+        .added {
+            background-color: #ccffcc; /* Light green */
+        }
+
+        .removed {
+            background-color: #ffcccc; /* Light red */
+        }
+
+        .modified {
+            background-color: #ffffcc; /* Light yellow */
         }
 
     </style>
@@ -225,7 +250,9 @@ function generateTableRows(changes: any[]):  { html: string, count: number } {
             color = 'orange';
         }
 
-        let delta = diffString(change.change.before, change.change.after);
+        //let delta = diffString(change.change.before, change.change.after);
+
+        let delta = jsonDiff(change.change.before, change.change.after);
 
         return `
             <tr onclick="toggleDetails(${index})">
@@ -234,16 +261,22 @@ function generateTableRows(changes: any[]):  { html: string, count: number } {
             </tr>
             <tr id="details-${index}" style="display: none;">
                 <td colspan="2">
-                    <table id="detailsTable">
+                    <table width="100%">
                         <tr>
-                            <th>Changes</th>
-                            <th>Before</th>
-                            <th>After</th>
+                        <h3>Diff</h3>
+                        <div class="diff-container">
+                            <pre>${renderDiff(delta)}</pre>
+                        </div>
                         </tr>
                         <tr>
-                            <td class="detailsCell_20"><pre>${renderDiff(delta)}</pre></td>
-                            <td class="detailsCell_40"><pre>${JSON.stringify(change.change.before, null, 2)}</pre></td>
-                            <td class="detailsCell_40"><pre>${JSON.stringify(change.change.after, null, 2)}</pre></td>
+                        <h3>Before</h3>
+                            <div class="json-container">
+                                <pre>${JSON.stringify(change.change.before, null, 2)}</pre>
+                            </div>
+                        <h3>After</h3>
+                            <div class="json-container">
+                                <pre>${JSON.stringify(change.change.after, null, 2)}</pre>
+                            </div>
                         </tr>
                     </table>
                 </td>
@@ -254,9 +287,42 @@ function generateTableRows(changes: any[]):  { html: string, count: number } {
     return { html: rowsHtml, count: changesCount };
 }
 
-function renderDiff(diff:string) {
-    return diff
-        .replace(/\u001b\[31m/g, '<span class="removed">')  // Red start
-        .replace(/\u001b\[32m/g, '<span class="added">')    // Green start
-        .replace(/\u001b\[39m/g, '</span>');                 // End color
+function jsonDiff(obj1:any, obj2:any, path = '') {
+    const diff:any = [];
+    if (obj1 === obj2) {
+      return diff;
+    }
+    const allKeys = new Set([...Object.keys(obj1 || {}), ...Object.keys(obj2 || {})]);
+  
+    allKeys.forEach(key => {
+      const value1 = obj1 ? obj1[key] : undefined;
+      const value2 = obj2 ? obj2[key] : undefined;
+      const currentPath = path ? `${path}.${key}` : key;
+  
+      if (value1 === undefined) {
+        diff.push({ type: 'added', path: currentPath, value: value2 });
+      } else if (value2 === undefined) {
+        diff.push({ type: 'removed', path: currentPath, value: value1 });
+      } else if (typeof value1 === 'object' && typeof value2 === 'object' && value1 !== null && value2 !== null) {
+        diff.push(...jsonDiff(value1, value2, currentPath));
+      } else if (value1 !== value2) {
+        diff.push({ type: 'modified', path: currentPath, oldValue: value1, newValue: value2 });
+      }
+    });
+  
+    return diff;
+  }
+
+function renderDiff(diff:any[]): string {
+    return diff.map(change => {
+        let formattedChange = '';
+        if (change.type === 'added') {
+          formattedChange = `<span class="added">+ ${change.path}: ${JSON.stringify(change.value)}</span>`;
+        } else if (change.type === 'removed') {
+          formattedChange = `<span class="removed">- ${change.path}: ${JSON.stringify(change.value)}</span>`;
+        } else if (change.type === 'modified') {
+          formattedChange = `<span class="modified">~ ${change.path}: ${JSON.stringify(change.oldValue)} -> ${JSON.stringify(change.newValue)}</span>`;
+        }
+        return formattedChange;
+      }).join('\n');
 }
