@@ -95,6 +95,8 @@ Each resource is displayed in an expandable card showing:
   - Sensitive data detection and masking for security-related fields
 - **Enhanced Theme Support**: Seamless integration with VS Code themes (dark, light, high contrast)
 - **Improved Resource Cards**: Clean, color-coded cards with better visual hierarchy
+![light](https://raw.githubusercontent.com/klaus82/tf-visualizer/refs/heads/main/assets/1.3.0/light.png
+![dark](https://raw.githubusercontent.com/klaus82/tf-visualizer/refs/heads/main/assets/1.3.0/dark.png
 
 ### 1.2.0
 - Differences and changes UI reviewed
