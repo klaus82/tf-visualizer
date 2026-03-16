@@ -119,3 +119,9 @@ Each resource is displayed in an expandable card showing:
 - [x] Search functionality to find specific changes.
 - [x] Improve the UI.
 - [ ] Visualize the `terraform graph -type=plan`
+  
+## Support
+
+<a href="https://www.buymeacoffee.com/klaus82" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px; width: 217px;" />
+</a
